@@ -1,7 +1,7 @@
 class Animation {
-  constructor(holder, slices, finishCallback) {
+  constructor(holder, elements, finishCallback) {
     this.holder = holder
-    this.slices = slices
+    this.elements = elements
     this.idx = 0
     this.enabled = false
     this.cooldown = 0
@@ -12,19 +12,23 @@ class Animation {
     this.enabled = true
   }
 
+  reset() {
+    this.enabled = false
+    this.idx = 0
+    this.cooldown = 0
+  }
+
   update() {
-    //log(this.holder)
     if (!this.enabled) {
       return
     }
-    //log("in", this.holder)
     this.cooldown++
-    //log(this.cooldown)
-    if (this.cooldown == globalConfig.animation_cooldown) {
+    if (this.cooldown == this.animation_cooldown) {
       this.cooldown = 0
       this.idx++
-      var to = this.slices[this.idx - 1]
-      if (!to) {
+      let to = this.elements[this.idx - 1]
+      //log(this.idx - 1, to, this.elements)
+      if (to == null) {
         this.enabled = false
         this.idx = 0
         this.cooldown = 0
@@ -34,7 +38,12 @@ class Animation {
         return
       }
 
-      this.holder.image = to
+      this.replaceElement(to)
     }
   }
+
+  replaceElement(to) {
+    //this.holder.setRawImage(to)
+  }
+
 }

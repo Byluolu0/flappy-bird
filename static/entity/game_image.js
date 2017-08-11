@@ -11,16 +11,18 @@ class GameImage {
     this.dead = false
     this.animations = {}
 
-    this.scene.addToDrawList(this)
+    this.degree = 0
+
+    this.addToElements()
+  }
+
+  addToElements() {
+    this.scene.addToElements(this)
   }
 
   setPosition(x, y) {
     this.x = x
     this.y = y
-  }
-
-  draw() {
-    this.ctx.drawImage(this.image, this.x, this.y)
   }
 
   update() {
@@ -29,22 +31,15 @@ class GameImage {
     }
   }
 
-  replace(image) {
-    this.image = image
-  }
-
-  setAnimations(animations) {
-    //log(animations)
+  addAnimations(animations) {
     for (var k in animations) {
       var v = animations[k]
       var _this = this
       var finishCallback = function() {
         if (_this[k]) _this[k]()
       }
-      //log(k, v)
       this.animations[k] = new Animation(this, v, finishCallback)
     }
-    //log("setAnimations", this.animations)
   }
 
   runAnimation(name) {
@@ -52,7 +47,13 @@ class GameImage {
     if (ani) {
       ani.enable()
     }
-    //log(name, ani)
+  }
+
+  resetAnimation(name) {
+    var ani = this.animations[name]
+    if (ani) {
+      ani.reset()
+    }
   }
 
   setDead() {
@@ -61,5 +62,34 @@ class GameImage {
 
   isDead() {
     return this.dead
+  }
+
+  setRawImage(name) {
+    let toImage = this.scene.resourseManager.getImageByName(name)
+    if (name) {
+      this.image = toImage
+    }
+  }
+
+  draw() {
+    if (this.degree % 360 == 0) {
+      this.ctx.drawImage(this.image, this.x, this.y)
+    } else {
+      this.drawRotate(this.degree)
+    }
+  }
+
+  drawRotate(degree) {
+    let translate_x = this.x + this.width / 2
+    let translate_y = this.y + this.height / 2
+    this.ctx.translate(translate_x, translate_y)
+    this.ctx.rotate(degree * Math.PI / 180)
+    this.ctx.drawImage(this.image, -this.width / 2, -this.height / 2)
+    this.ctx.rotate(-degree * Math.PI / 180)
+    this.ctx.translate(-translate_x, -translate_y)
+  }
+
+  rotate(degree) {
+    this.degree = degree
   }
 }

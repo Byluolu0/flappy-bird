@@ -5,27 +5,30 @@ class BaseScene {
     this.ctx = game.ctx
     this.width = game.canvas.width
     this.height = game.canvas.height
-    this.drawList = []
+    this.elements = []
   }
 
-  addToDrawList(element) {
-    this.drawList.push(element)
+  addToElements(element) {
+    this.elements.push(element)
   }
 
-  removeFromDrawList(element) {
-    var index = this.drawList.indexOf(element)
-    this.drawList.splice(index, 1)
+  removeFromElements(element) {
+    var index = this.elements.indexOf(element)
+    this.elements.splice(index, 1)
   }
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-    for (var i in this.drawList) {
-      var drawItem = this.drawList[i]
+    for (var i in this.elements) {
+      var drawItem = this.elements[i]
       drawItem.draw()
     }
   }
 
   update() {
-
+    for (var i in this.elements) {
+      var v = this.elements[i]
+      v.update()
+    }
   }
 }

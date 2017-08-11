@@ -1,4 +1,5 @@
 function collide(a, b) {
+  if (a == null || b == null) return
   if (a.isDead() && b.isDead()) {
     return false
   }
@@ -20,7 +21,7 @@ function AcollideB(a, b) {
 }
 
 function pointInRectangle(x, y, rectangle) {
-  var r = rectangle
+  let r = rectangle
   if (r.x <= x && r.x + r.width >= x && r.y <= y && r.y + r.height >= y) {
     return true
   }
@@ -30,17 +31,23 @@ function pointInRectangle(x, y, rectangle) {
 // 随机 0 ~ (x - 1)整数
 // Math.random  0 ~ 1，
 function randomIn(x) {
-  if (x == 0) return 0;
-  var result = Math.floor(Math.random() * x)
+  if (x == 0) return 0
+  let result = Math.floor(Math.random() * x)
   if (result == x) {
     result = x - 1
   }
   return result
 }
 
+function randomBetween(x, y) {
+  if (x > y) return 0
+  let result = y - x
+  return randomIn(result) + x
+}
+
 function fillMultiLine(ctx, str, x, y, rowInterval) {
-  var s = str.split("\n")
-  for (var i in s) {
+  let s = str.split("\n")
+  for (let i in s) {
     line = s[i]
     ctx.fillText(line, x, y)
     y += rowInterval

@@ -1,8 +1,8 @@
 class SceneMain extends BaseScene {
-  constructor(game, resourseManager, eventManager) {
+  constructor(game) {
     super(game)
-    this.eventManager = eventManager
-    this.resourseManager = resourseManager
+    this.eventManager = game.eventManager
+    this.resourseManager = game.resourseManager
 
     this.tube_cooldown = 0
     this.max_tube_cooldown = 60
@@ -29,6 +29,10 @@ class SceneMain extends BaseScene {
     this.setImageAnimations(bird, configBird.image_animations)
     this.setRotateAnimations(bird, configBird.rotate_animations)
     this.bird = bird
+
+    let scoreBorad = new ScoreBoard(this)
+    scoreBorad.setPosition(this.width - 80, 20)
+    this.scoreBorad = scoreBorad
 
     this.createTube()
 
@@ -63,6 +67,7 @@ class SceneMain extends BaseScene {
     super.draw()
     // 地板最后画
     this.ground.draw()
+    this.scoreBorad.draw()
   }
 
   update() {
@@ -77,10 +82,7 @@ class SceneMain extends BaseScene {
     for (let i in this.tubes) {
       let tube = this.tubes[i]
       if (collide(tube, this.bird)) {
-        log("dead")
-        this.removeFromElements(this.bird)
-        this.bird = null
-        //this.gameover()
+        this.gameover()
       }
     }
   }
@@ -89,15 +91,26 @@ class SceneMain extends BaseScene {
     let configUpTube = globalConfig.uptube
     let upTubeRawImage = this.resourseManager.getImageByName(configUpTube.defaultImage)
     let upTube = new Tube(this, configUpTube, upTubeRawImage)
-    let up_y = randomBetween(100, 200)
+    let up_y = randomBetween(globalConfig.uptube_length[0], globalConfig.uptube_length[1])
     upTube.setPosition(this.width - upTube.width, up_y - upTube.height)
     this.tubes.push(upTube)
+
+    let tube_interval = randomBetween(globalConfig.tube_interval[0], globalConfig.tube_interval[1])
+    let down_y = this.height - tube_interval - up_y
 
     let configDownTube = globalConfig.downtube
     let downTubeRawImage = this.resourseManager.getImageByName(configDownTube.defaultImage)
     let downTube = new Tube(this, configDownTube, downTubeRawImage)
-    let down_y = randomBetween(100, 200)
     downTube.setPosition(this.width - upTube.width, this.height - down_y)
     this.tubes.push(downTube)
+  }
+
+  addScore(score) {
+    this.scoreBorad.addScore(score)
+  }
+
+  gameover() {
+    var s = new SceneEnd(this.game, this.scoreBorad.score)
+    this.game.setScene(s)
   }
 }

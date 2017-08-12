@@ -3,6 +3,8 @@ const globalConfig = {
   fps: 30,
   image_animation_cooldown: 5,
   rotate_animation_cooldown: 2,
+  tube_interval: [90, 170],
+  uptube_length: [100, 250],
   image_path: {
     logo: '../static/images/logo.png',
     bg: '../static/images/background.png',
@@ -51,5 +53,6 @@ const globalConfig = {
   },
   operation: {
     jump: 'j',
+    start: 'j',
   },
 }

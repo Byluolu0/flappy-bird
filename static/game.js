@@ -9,7 +9,7 @@ class Game {
   }
 
   createStartScene() {
-    var s = new SceneMain(this, this.resourseManager, this.eventManager)
+    var s = new SceneStart(this)
     this.setScene(s)
   }
 
